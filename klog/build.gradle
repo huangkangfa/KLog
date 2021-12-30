@@ -1,0 +1,51 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdk 31
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 31
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: '*.jar', dir: 'libs')
+}
+
+task makeJar(type: Copy) {
+    //删除存在的
+    delete 'build/outputs/klog.jar'
+    //从该目录下加载要打包的文件，注意为编译后classes.jar路径，自己看一下
+    //注意：文件夹名称有可能为default，也可能是release
+    //路径：intermediates/packaged-classes/release/ 或 intermediates/bundles/default/下
+    from('build/intermediates/aar_main_jar/release/')
+    //jar包的保存目录
+    into('build/outputs/')
+    //设置过滤，只打包classes文件
+    include('classes.jar')
+    //重命名，myutils.jar 名字自己随便起
+    rename('classes.jar', 'klog_' + new Date().format('yyyyMMddHHmm') + '.jar')
+}
+makeJar.dependsOn(build)
