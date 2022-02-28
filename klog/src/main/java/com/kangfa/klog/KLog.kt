@@ -7,6 +7,7 @@ import org.joda.time.Instant
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.system.exitProcess
@@ -174,11 +175,13 @@ object KLog : Thread.UncaughtExceptionHandler {
             return false
         }
 
-        // 当前时间
-        val instant = Instant.now()
-
         // 时间戳转换
-        val stringBuilder = StringBuilder(instant.toDateTime().toString("yyyy/MM/dd HH:mm:ss"))
+        val stringBuilder = StringBuilder(
+            Instant.now().toDateTime().toString(
+                "yyyy/MM/dd HH:mm:ss",
+                Locale.CHINA
+            )
+        )
         stringBuilder.append(":\n")
 
         // 获取错误信息
